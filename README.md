@@ -5,7 +5,7 @@ This is the documentation of Intrepid best practices and style regarding the Swi
 
 ##Making / Requesting Changes
 
-Feedback and changes are encouraged!  The current maintainers of this style guide are @brightredchili and @loganwright.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
+Feedback and change are encouraged!  The current maintainers of this style guide are @brightredchili.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
 then open a pull request. :zap:
 
 ##Goals
