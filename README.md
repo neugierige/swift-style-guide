@@ -21,24 +21,33 @@ rough priority order):
 
 ##Table Of Contents
 
-* [Swiftclean Config](SwiftStyleSettings.plist)
-* [Whitespace](#whitespace)
-* [Code Grouping](#code-grouping)
-* [Let vs Var](#let-vs-var)
-* [Force-Unwrapping of Optionals](#force-unwrapping-of-optionals)
-* [Optional Chaining](#optional-chaining)
-* [Implicitly Unwrapped Optionals](#implicitly-unwrapped-optionals)
-* [Getters](#getters)
+* [General](#general)
+	* [Whitespace](#whitespace)
+	* [Code Grouping](#code-grouping)
+* [Classes, Structs, and Protocols](#classes-structs-and-protocols)
+	* [Structs vs Classes](#structs-vs-classes)
 * [Access Control](#access-control)
-* [Type Specifications](#type-specifications)
-* [Referring to self](#referring-to-self)
-* [Structs vs Classes](#structs-vs-classes)
-* [Parameterized Types](#parameterized-types)
-* [Operator Definitions](#operator-definitions)
+	* [Getters](#getters)
+	* [Access Control](#access-control)
+	* [Referring to self](#referring-to-self)
 * [Functions](#functions)
+	* [Declarations](#declarations)
+	* [Calling](#calling)
 * [Closures](#closures)
+	* [Trailing closures](#trailing-closures)
+	* [Multiple closures](#multiple-closures)
+* [Types](#types)
+	* [Type Specifications](#type-specifications)
+	* [Let vs Var](#let-vs-var)
+	* [Parameterized Types](#parameterized-types)
+	* [Force-Unwrapping of Optionals](#force-unwrapping-of-optionals)
+	* [Optional Chaining](#optional-chaining)
+	* [Implicitly Unwrapped Optionals](#implicitly-unwrapped-optionals)
+	* [Operator Definitions](#operator-definitions)
+* [Swift-Clean](#swift-clean)
 
-##Whitespace
+##General
+###Whitespace
 
  * Indent using 4 spaces. Never indent with tabs. Be sure to set this preference in Xcode.
  * End files with a newline.
@@ -46,7 +55,7 @@ rough priority order):
  * Don’t leave trailing whitespace.
    * Not even leading indentation on blank lines.
 
-##Code Grouping
+###Code Grouping
 
 Code should strive to be separated into meaningful chunks of functionality.  These larger chunks should be indicated by using the `// MARK: ` keyword.
 
@@ -521,3 +530,7 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
         // Do stuff
 }
 ```
+
+##Swift-Clean
+
+We use Swift-Clean in order to ensure code quality and consistency across our projects. The program is available [here](http://swiftcleanapp.com) and our config is available in [this repository](SwiftStyleSettings.plist). Licenses for Intrepid employees are available if needed.
