@@ -68,7 +68,7 @@ When grouping protocol conformance, always use the name of the protocol and only
 // MARK: Table View Delegate
 ```
 
-##Let vs Var
+##Let vs. Var
 
 Prefer `let`-bindings over `var`-bindings wherever possible
 
@@ -448,7 +448,7 @@ func move(view: UIView, _ frame: CGRect)
 - Avoid trailing closures at the end of functions with many arguments.  (3+)?
 
 
-###Closures
+##Closures
 
 Shorthand argument syntax should only be used in closures that can be understood in a few lines.  In other situations, declaring a variable that helps identify the underlying value is preferred.
 
