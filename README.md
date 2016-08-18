@@ -591,7 +591,7 @@ enum Directions {
 ```
 
 ###Dot Notation
-Enums must be checked with `.` notation whenever they were used. In Swift 2.x it was possible to access enum cases without the `.` prefix
+Enums must be checked with `.` notation whenever they are used. In Swift 2.x it was possible to access enum cases without the `.` prefix
 
 #####Like This
 
