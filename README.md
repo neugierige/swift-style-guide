@@ -455,8 +455,8 @@ func foo(x: Int, y: Int)
 **Swift 2**
 
 ```Swift
-func foo(x: Int, y: Int)
-// Callers will see foo(_: Int, y: Int)
+func foo(x x: Int, y: Int)
+// Callers will see foo(x: Int, y: Int)
 ```
 
 ###Calling
