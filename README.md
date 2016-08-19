@@ -1,8 +1,6 @@
 ![Intrepid Pursuits](intrepid-logo.png)
 #Swift Style Guide
 
----
-
 This is the documentation of Intrepid best practices and style regarding the Swift language.
 
 ##Making / Requesting Changes
@@ -12,8 +10,7 @@ then open a pull request. :zap:
 
 ##Goals
 
-This is an attempt to encourage patterns that accomplish the following goals (in
-rough priority order):
+Attempt to encourage patterns that accomplish the following goals:
 
  1. Increased rigor, and decreased likelihood of programmer error
  2. Increased clarity of intent
@@ -55,7 +52,7 @@ rough priority order):
 
 ###Swift-Clean
 
-We use the Swift-Clean app in order to ensure code quality and consistency across our projects. The program is available [here](http://swiftcleanapp.com) and our config is available in [this repository](SwiftStyleSettings.plist). A license for Intrepid employees is available if needed.
+We use the Swift-Clean app in order to ensure code quality and consistency across our projects. The program is available [here](http://swiftcleanapp.com) and our config is available in [here](SwiftStyleSettings.plist). A license for Intrepid employees is available if needed.
 
 ###Whitespace
 
@@ -145,7 +142,7 @@ struct Car: Vehicle {
 }
 ```
 
-_Rationale:_ Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
+**_Rationale:_** Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
 
 ##Types
 
@@ -170,7 +167,7 @@ Prefer `let`-bindings over `var`-bindings wherever possible
 
 Use `let foo = …` over `var foo = …` wherever possible (and when in doubt). Only use `var` if you absolutely have to (i.e. you *know* that the value might change, e.g. when using the `weak` storage modifier).
 
-_Rationale:_ The intent and meaning of both keywords is clear, but *let-by-default* results in safer and clearer code.
+**_Rationale:_** The intent and meaning of both keywords is clear, but *let-by-default* results in safer and clearer code.
 
 A `let`-binding guarantees and *clearly signals to the programmer* that its value is supposed to and will never change. Subsequent code can thus make stronger assumptions about its usage.
 
@@ -202,7 +199,7 @@ struct Composite<T> {
 }
 ```
 
-_Rationale:_ Omitting redundant type parameters clarifies the intent, and makes it obvious by contrast when the returned type takes different type parameters.
+**_Rationale:_** Omitting redundant type parameters clarifies the intent, and makes it obvious by contrast when the returned type takes different type parameters.
 
 ###Operator Definitions
 
@@ -220,7 +217,7 @@ func <|(lhs: Int, rhs: Int) -> Int
 func <|<<A>(lhs: A, rhs: A) -> A
 ```
 
-_Rationale:_ Operators consist of punctuation characters, which can make them difficult to read when immediately followed by the punctuation for a type or value parameter list. Adding whitespace separates the two more clearly.
+**_Rationale:_** Operators consist of punctuation characters, which can make them difficult to read when immediately followed by the punctuation for a type or value parameter list. Adding whitespace separates the two more clearly.
 
 ###Dictionaries
 
@@ -273,7 +270,7 @@ let padding: CGFloat = 20
 var hello: String? = "Hello"
 ```
 
-_Rationale:_ The type specifier is saying something about the _identifier_ so
+**_Rationale:_** The type specifier is saying something about the _identifier_ so
 it should be positioned with it.
 
 ##Optionals
@@ -292,7 +289,7 @@ if let foo = foo {
 }
 ```
 
-_Rationale:_ Explicit `if let`-binding of optionals results in safer code. Force unwrapping is more prone to lead to runtime crashes.
+**_Rationale:_** Explicit `if let`-binding of optionals results in safer code. Force unwrapping is more prone to lead to runtime crashes.
 
 ###Optional Chaining
 
@@ -306,7 +303,7 @@ cell.label?.text = “Hello World”
 return cell
 ```
 
-_Rationale:_ The use of optional binding here is overkill.
+**_Rationale:_** The use of optional binding here is overkill.
 
 ###Implicitly Unwrapped Optionals
 
@@ -320,7 +317,7 @@ If a variable is dependent on `self` and thus not settable during initialization
 lazy var customObject: CustomObject = CustomObject(dataSource: self)
 ```
 
-_Rationale:_ Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
+**_Rationale:_** Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
 
 ##Access Control
 
@@ -352,7 +349,7 @@ When dealing with functionality that relies on ObjC systems such as the target-s
 public func handleTap(tap: UITapGestureRecognizer)
 ```
 
-_Rationale:_ It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
+**_Rationale:_** It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
 
 ###Getters
 
@@ -385,7 +382,7 @@ subscript(index: Int) -> T {
 }
 ```
 
-_Rationale:_ The intent and meaning of the first version is clear, and results in less code.
+**_Rationale:_** The intent and meaning of the first version is clear, and results in less code.
 
 ###Referring to `self`
 
@@ -417,13 +414,13 @@ extension History {
 }
 ```
 
-_Rationale:_ This makes the capturing semantics of `self` stand out more in closures, and avoids verbosity elsewhere.
+**_Rationale:_** This makes the capturing semantics of `self` stand out more in closures, and avoids verbosity elsewhere.
 
 ###Make classes `final` by default
 
 Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
 
-_Rationale:_ Composition is usually preferable to inheritance, and opting _in_ to inheritance hopefully means that more thought will be put into the decision.
+**_Rationale:_** Composition is usually preferable to inheritance, and opting _in_ to inheritance hopefully means that more thought will be put into the decision.
 
 ##Functions
 
