@@ -1,4 +1,4 @@
-![Intrepid Pursuits](http://imgur.com/5SG1M28.png)
+![Intrepid Pursuits](intrepid-logo.png)
 #Swift Style Guide
 
 ---
