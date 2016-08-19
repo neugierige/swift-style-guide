@@ -7,7 +7,7 @@ This is the documentation of Intrepid best practices and style regarding the Swi
 
 ##Making / Requesting Changes
 
-Feedback and change are encouraged!  The current maintainers of this style guide are @brightredchili and @loganwright.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
+Feedback and changes are encouraged!  The current maintainers of this style guide are @brightredchili and @loganwright.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
 then open a pull request. :zap:
 
 ##Goals
@@ -16,37 +16,47 @@ This is an attempt to encourage patterns that accomplish the following goals (in
 rough priority order):
 
  1. Increased rigor, and decreased likelihood of programmer error
- 1. Increased clarity of intent
- 1. Aesthetic consistency
+ 2. Increased clarity of intent
+ 3. Aesthetic consistency
 
 ##Table Of Contents
 
 * [General](#general)
+	* [Swift-Clean](#swift-clean)
 	* [Whitespace](#whitespace)
 	* [Code Grouping](#code-grouping)
 * [Classes, Structs, and Protocols](#classes-structs-and-protocols)
 	* [Structs vs Classes](#structs-vs-classes)
-* [Access Control](#access-control)
-	* [Getters](#getters)
-	* [Access Control](#access-control)
-	* [Referring to self](#referring-to-self)
-* [Functions](#functions)
-	* [Declarations](#declarations)
-	* [Calling](#calling)
-* [Closures](#closures)
-	* [Trailing closures](#trailing-closures)
-	* [Multiple closures](#multiple-closures)
 * [Types](#types)
 	* [Type Specifications](#type-specifications)
 	* [Let vs Var](#let-vs-var)
 	* [Parameterized Types](#parameterized-types)
+	* [Operator Definitions](#operator-definitions)
+	* [Dictionaries](#dictionaries)
+	* [Type Inference](#type-inference)
+* [Optionals](#optionals)
 	* [Force-Unwrapping of Optionals](#force-unwrapping-of-optionals)
 	* [Optional Chaining](#optional-chaining)
 	* [Implicitly Unwrapped Optionals](#implicitly-unwrapped-optionals)
-	* [Operator Definitions](#operator-definitions)
-* [Swift-Clean](#swift-clean)
+* [Access Control](#access-control)
+	* [Getters](#getters)
+	* [Referring to self](#referring-to-self)
+	* [Classes final by default](#make-classes-final-by-default)
+* [Functions](#functions)
+	* [Declarations](#declarations)
+	* [Calling](#calling)
+* [Closures](#closures)
+	* [Closure Specifications](#closure-specifications)
+	* [Shorthand](#shorthand)
+	* [Trailing closures](#trailing-closures)
+	* [Multiple closures](#multiple-closures)
 
 ##General
+
+###Swift-Clean
+
+We use the Swift-Clean app in order to ensure code quality and consistency across our projects. The program is available [here](http://swiftcleanapp.com) and our config is available in [this repository](SwiftStyleSettings.plist). A license for Intrepid employees is available if needed.
+
 ###Whitespace
 
  * Indent using 4 spaces. Never indent with tabs. Be sure to set this preference in Xcode.
@@ -77,251 +87,9 @@ When grouping protocol conformance, always use the name of the protocol and only
 // MARK: Table View Delegate
 ```
 
-##Let vs. Var
+##Classes, Structs, and Protocols
 
-Prefer `let`-bindings over `var`-bindings wherever possible
-
-Use `let foo = …` over `var foo = …` wherever possible (and when in doubt). Only use `var` if you absolutely have to (i.e. you *know* that the value might change, e.g. when using the `weak` storage modifier).
-
-_Rationale:_ The intent and meaning of both keywords is clear, but *let-by-default* results in safer and clearer code.
-
-A `let`-binding guarantees and *clearly signals to the programmer* that its value is supposed to and will never change. Subsequent code can thus make stronger assumptions about its usage.
-
-It becomes easier to reason about code. Had you used `var` while still making the assumption that the value never changed, you would have to manually check that.
-
-Accordingly, whenever you see a `var` identifier being used, assume that it will change and ask yourself why.
-
-##Force-Unwrapping of Optionals
-
-If you have an identifier `foo` of type `FooType?` or `FooType!`, don't force-unwrap it to get to the underlying value (`foo!`) if possible.
-
-Instead, prefer this:
-
-```swift
-if let foo = foo {
-    // Use unwrapped `foo` value in here
-} else {
-    // If appropriate, handle the case where the optional is nil
-}
-```
-
-_Rationale:_ Explicit `if let`-binding of optionals results in safer code. Force unwrapping is more prone to lead to runtime crashes.
-
-##Optional Chaining
-
-Optional chaining in Swift is similar to messaging `nil` in Objective-C, but in a way that works for any type, and that can be checked for success or failure.
-
-Use optional chaining if you want to assign a value to a property on an optional and you don’t plan on taking any alternative action if that optional is `nil`.
-
-```Swift
-let cell: YourCell = tableView.ip_dequeueCell(indexPath)
-cell.label?.text = “Hello World”
-return cell
-```
-
-_Rationale:_ The use of optional binding here is overkill.
-
-##Implicitly Unwrapped Optionals
-
-Implicitly unwrapped optionals have the potential to cause runtime crashes and should be used carefully. If a variable has the possibility of being `nil`, you should always declare it as an optional `?`.
-
-Implicitly unwrapped optionals may be used in situations where limitations prevent the use of a non-optional type, but will never be accessed without a value.
-
-If a variable is dependent on `self` and thus not settable during initialization, consider using a `lazy` variable.
-
-```Swift
-lazy var customObject: CustomObject = CustomObject(dataSource: self)
-```
-
-_Rationale:_ Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
-
-##Getters
-
-When possible, omit the `get` keyword on read-only computed properties and
-read-only subscripts.
-
-#####Like this:
-```swift
-var myGreatProperty: Int {
-	return 4
-}
-
-subscript(index: Int) -> T {
-    return objects[index]
-}
-```
-
-######Not this:
-```swift
-var myGreatProperty: Int {
-	get {
-		return 4
-	}
-}
-
-subscript(index: Int) -> T {
-    get {
-        return objects[index]
-    }
-}
-```
-
-_Rationale:_ The intent and meaning of the first version is clear, and results in less code.
-
-##Access Control
-
-Top-level functions, types, and variables should always have explicit access control specifiers:
-
-```swift
-public var whoopsGlobalState: Int
-internal struct TheFez {}
-private func doTheThings(things: [Thing]) {}
-```
-
-However, definitions within those can leave access control implicit, where appropriate:
-
-```swift
-internal struct TheFez {
-	var owner: Person = Joshaber()
-}
-```
-
-When dealing with functionality that relies on ObjC systems such as the target-selector pattern, one should still strive for appropriate access control.  This can be achieved through the `@objC` attribute.  
-
-#####Like this:
-```Swift
-@objc private func handleTap(tap: UITapGestureRecognizer)
-```
-
-######Not this:
-```Swift
-public func handleTap(tap: UITapGestureRecognizer)
-```
-
-_Rationale:_ It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
-
-##Type Specifications
-
-When specifying the type of an identifier, always put the colon immediately
-after the identifier, followed by a space and then the type name.
-
-```swift
-class SmallBatchSustainableFairtrade: Coffee { ... }
-
-let timeToCoffee: NSTimeInterval = 2
-
-func makeCoffee(type: CoffeeType) -> Coffee { ... }
-
-func swap<T: Swappable>(inout a: T, inout b: T) { ... }
-```
-
-##Closure Specifications
-
-It is preferable to associate a closure's type from the left hand side when possible.
-
-#####Like this:
- ```Swift
- let layout: (UIView, UIView) -> Void = { view1, view2 in
-   view1.center = view2.center
-   // ...
- }
- ```
-
-######Not this:
-```Swift
-let layout = { (view1: UIView, view2: UIView) in
-  view1.center = view2.center
-  // ...
-}
-```
-
-##Type Inference
-
-Unless it impairs readability or understanding, it preferable to rely on Swift's type inference where appropriate.
-
-#####Like this:
-```Swift
-let hello = "Hello"
-```
-
-######Not this:
-```Swift
-let hello: String = "Hello"
-```
-
-This does not mean one should avoid those situations where an explicit type is required.
-
-#####Like this:
-```Swift
-let padding: CGFloat = 20
-var hello: String? = "Hello"
-```
-
-_Rationale:_ The type specifier is saying something about the _identifier_ so
-it should be positioned with it.
-
-##Dictionaries
-
-When specifying the type of a dictionary, always leave spaces on either side of the colon.
-
-#####Like this:
-```swift
-let capitals: [Country : City] = [Sweden : Stockholm]
-```
-
-######Not this:
-```swift
-let capitals: [Country: City] = [ Sweden: Stockholm ]
-```
-
-For literal dictionaries that exceed a single line, newline syntax is preferable:
-
-#####Like this:
-```swift
-let capitals: [Country : City] = [
-    Sweden : Stockholm,
-    USA : WashingtonDC
-]
-```
-
-######Not this:
-```swift
-let capitals: [Country : City] = [Sweden : Stockholm, USA : WashingtonDC]
-```
-
-##Referring to `self`
-
-When accessing properties or methods on `self`, leave the reference to `self` implicit by default:
-
-```swift
-private class History {
-	var events: [Event]
-
-	func rewrite() {
-		events = []
-	}
-}
-```
-
-Only include the explicit keyword when required by the language—for example, in a closure, or when parameter names conflict:
-
-```swift
-extension History {
-	init(events: [Event]) {
-		self.events = events
-	}
-
-	var whenVictorious: () -> () {
-		return {
-			self.rewrite()
-		}
-	}
-}
-```
-
-_Rationale:_ This makes the capturing semantics of `self` stand out more in closures, and avoids verbosity elsewhere.
-
-##Structs vs Classes
+###Structs vs Classes
 
 Unless you require functionality that can only be provided by a class (like identity or deinitializers), implement a struct instead.
 
@@ -379,13 +147,38 @@ struct Car: Vehicle {
 
 _Rationale:_ Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
 
-##Make classes `final` by default
+##Types
 
-Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
+###Type Specifications
 
-_Rationale:_ Composition is usually preferable to inheritance, and opting _in_ to inheritance hopefully means that more thought will be put into the decision.
+When specifying the type of an identifier, always put the colon immediately
+after the identifier, followed by a space and then the type name.
 
-##Parameterized Types
+```swift
+class SmallBatchSustainableFairtrade: Coffee { ... }
+
+let timeToCoffee: NSTimeInterval = 2
+
+func makeCoffee(type: CoffeeType) -> Coffee { ... }
+
+func swap<T: Swappable>(inout a: T, inout b: T) { ... }
+```
+
+###Let vs Var
+
+Prefer `let`-bindings over `var`-bindings wherever possible
+
+Use `let foo = …` over `var foo = …` wherever possible (and when in doubt). Only use `var` if you absolutely have to (i.e. you *know* that the value might change, e.g. when using the `weak` storage modifier).
+
+_Rationale:_ The intent and meaning of both keywords is clear, but *let-by-default* results in safer and clearer code.
+
+A `let`-binding guarantees and *clearly signals to the programmer* that its value is supposed to and will never change. Subsequent code can thus make stronger assumptions about its usage.
+
+It becomes easier to reason about code. Had you used `var` while still making the assumption that the value never changed, you would have to manually check that.
+
+Accordingly, whenever you see a `var` identifier being used, assume that it will change and ask yourself why.
+
+###Parameterized Types
 
 Methods of parameterized types can omit type parameters on the receiving type when they’re identical to the receiver’s.
 
@@ -411,7 +204,7 @@ struct Composite<T> {
 
 _Rationale:_ Omitting redundant type parameters clarifies the intent, and makes it obvious by contrast when the returned type takes different type parameters.
 
-##Operator Definitions
+###Operator Definitions
 
 Use whitespace around operators when defining them.
 
@@ -428,6 +221,209 @@ func <|<<A>(lhs: A, rhs: A) -> A
 ```
 
 _Rationale:_ Operators consist of punctuation characters, which can make them difficult to read when immediately followed by the punctuation for a type or value parameter list. Adding whitespace separates the two more clearly.
+
+###Dictionaries
+
+When specifying the type of a dictionary, always leave spaces on either side of the colon.
+
+#####Like this:
+```swift
+let capitals: [Country : City] = [Sweden : Stockholm]
+```
+
+######Not this:
+```swift
+let capitals: [Country: City] = [ Sweden: Stockholm ]
+```
+
+For literal dictionaries that exceed a single line, newline syntax is preferable:
+
+#####Like this:
+```swift
+let capitals: [Country : City] = [
+    Sweden : Stockholm,
+    USA : WashingtonDC
+]
+```
+
+######Not this:
+```swift
+let capitals: [Country : City] = [Sweden : Stockholm, USA : WashingtonDC]
+```
+
+###Type Inference
+
+Unless it impairs readability or understanding, it preferable to rely on Swift's type inference where appropriate.
+
+#####Like this:
+```Swift
+let hello = "Hello"
+```
+
+######Not this:
+```Swift
+let hello: String = "Hello"
+```
+
+This does not mean one should avoid those situations where an explicit type is required.
+
+#####Like this:
+```Swift
+let padding: CGFloat = 20
+var hello: String? = "Hello"
+```
+
+_Rationale:_ The type specifier is saying something about the _identifier_ so
+it should be positioned with it.
+
+##Optionals
+
+###Force-Unwrapping of Optionals
+
+If you have an identifier `foo` of type `FooType?` or `FooType!`, don't force-unwrap it to get to the underlying value (`foo!`) if possible.
+
+Instead, prefer this:
+
+```swift
+if let foo = foo {
+    // Use unwrapped `foo` value in here
+} else {
+    // If appropriate, handle the case where the optional is nil
+}
+```
+
+_Rationale:_ Explicit `if let`-binding of optionals results in safer code. Force unwrapping is more prone to lead to runtime crashes.
+
+###Optional Chaining
+
+Optional chaining in Swift is similar to messaging `nil` in Objective-C, but in a way that works for any type, and that can be checked for success or failure.
+
+Use optional chaining if you want to assign a value to a property on an optional and you don’t plan on taking any alternative action if that optional is `nil`.
+
+```Swift
+let cell: YourCell = tableView.ip_dequeueCell(indexPath)
+cell.label?.text = “Hello World”
+return cell
+```
+
+_Rationale:_ The use of optional binding here is overkill.
+
+###Implicitly Unwrapped Optionals
+
+Implicitly unwrapped optionals have the potential to cause runtime crashes and should be used carefully. If a variable has the possibility of being `nil`, you should always declare it as an optional `?`.
+
+Implicitly unwrapped optionals may be used in situations where limitations prevent the use of a non-optional type, but will never be accessed without a value.
+
+If a variable is dependent on `self` and thus not settable during initialization, consider using a `lazy` variable.
+
+```Swift
+lazy var customObject: CustomObject = CustomObject(dataSource: self)
+```
+
+_Rationale:_ Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
+
+##Access Control
+
+Top-level functions, types, and variables should always have explicit access control specifiers:
+
+```swift
+public var whoopsGlobalState: Int
+internal struct TheFez {}
+private func doTheThings(things: [Thing]) {}
+```
+
+However, definitions within those can leave access control implicit, where appropriate:
+
+```swift
+internal struct TheFez {
+	var owner: Person = Joshaber()
+}
+```
+
+When dealing with functionality that relies on ObjC systems such as the target-selector pattern, one should still strive for appropriate access control.  This can be achieved through the `@objC` attribute.  
+
+#####Like this:
+```Swift
+@objc private func handleTap(tap: UITapGestureRecognizer)
+```
+
+######Not this:
+```Swift
+public func handleTap(tap: UITapGestureRecognizer)
+```
+
+_Rationale:_ It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
+
+###Getters
+
+When possible, omit the `get` keyword on read-only computed properties and
+read-only subscripts.
+
+#####Like this:
+```swift
+var myGreatProperty: Int {
+	return 4
+}
+
+subscript(index: Int) -> T {
+    return objects[index]
+}
+```
+
+######Not this:
+```swift
+var myGreatProperty: Int {
+	get {
+		return 4
+	}
+}
+
+subscript(index: Int) -> T {
+    get {
+        return objects[index]
+    }
+}
+```
+
+_Rationale:_ The intent and meaning of the first version is clear, and results in less code.
+
+###Referring to `self`
+
+When accessing properties or methods on `self`, leave the reference to `self` implicit by default:
+
+```swift
+private class History {
+	var events: [Event]
+
+	func rewrite() {
+		events = []
+	}
+}
+```
+
+Only include the explicit keyword when required by the language—for example, in a closure, or when parameter names conflict:
+
+```swift
+extension History {
+	init(events: [Event]) {
+		self.events = events
+	}
+
+	var whenVictorious: () -> () {
+		return {
+			self.rewrite()
+		}
+	}
+}
+```
+
+_Rationale:_ This makes the capturing semantics of `self` stand out more in closures, and avoids verbosity elsewhere.
+
+###Make classes `final` by default
+
+Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
+
+_Rationale:_ Composition is usually preferable to inheritance, and opting _in_ to inheritance hopefully means that more thought will be put into the decision.
 
 ##Functions
 
@@ -456,8 +452,29 @@ func move(view: UIView, _ frame: CGRect)
 - Use trailing closure syntax for simple functions
 - Avoid trailing closures at the end of functions with many arguments.  (3+)?
 
-
 ##Closures
+
+###Closure Specifications
+
+It is preferable to associate a closure's type from the left hand side when possible.
+
+#####Like this:
+ ```Swift
+ let layout: (UIView, UIView) -> Void = { view1, view2 in
+   view1.center = view2.center
+   // ...
+ }
+ ```
+
+######Not this:
+```Swift
+let layout = { (view1: UIView, view2: UIView) in
+  view1.center = view2.center
+  // ...
+}
+```
+
+###Shorthand
 
 Shorthand argument syntax should only be used in closures that can be understood in a few lines.  In other situations, declaring a variable that helps identify the underlying value is preferred.
 
@@ -521,8 +538,6 @@ UIView.animateWithDuration(
 )
 ```
 ######Not this:
-
-(Even though the default spacing and syntax when you do this in xcode might end up looking like this)
 ```swift
 UIView.animateWithDuration(SomeTimeValue, animations: {
     // Do stuff
@@ -530,7 +545,4 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
         // Do stuff
 }
 ```
-
-##Swift-Clean
-
-We use Swift-Clean in order to ensure code quality and consistency across our projects. The program is available [here](http://swiftcleanapp.com) and our config is available in [this repository](SwiftStyleSettings.plist). Licenses for Intrepid employees are available if needed.
+(Even though the default spacing and syntax from Xcode might do it this way)
