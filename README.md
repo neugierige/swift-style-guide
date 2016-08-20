@@ -31,6 +31,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Operator Definitions](#operator-definitions)
 	* [Dictionaries](#dictionaries)
 	* [Type Inference](#type-inference)
+    * [Enums](#enums)
 * [Optionals](#optionals)
 	* [Force-Unwrapping of Optionals](#force-unwrapping-of-optionals)
 	* [Optional Chaining](#optional-chaining)
@@ -273,6 +274,34 @@ var hello: String? = "Hello"
 
 **_Rationale:_** The type specifier is saying something about the _identifier_ so
 it should be positioned with it.
+
+###Enums
+
+Enum cases should be defined in `camelCase` with leading lowercase letters. This is counter to Swift 2.x where uppercase was preferred.
+
+#####Like This
+
+```Swift
+enum Directions {
+    case north
+    case south
+    case east
+    case west
+}
+```
+
+######Not This
+
+```Swift
+enum Directions {
+    case North
+    case South
+    case East
+    case West
+}
+```
+
+**_Rationale:_** Uppercase syntax should be reserved for typed declarations only.
 
 ##Optionals
 
@@ -562,57 +591,3 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
 }
 ```
 (Even though the default spacing and syntax from Xcode might do it this way)
-
-##Enums
-
-###Naming
-Enum cases should be defined in `camelCase` with leading lowercase letters. This is counter to Swift 2.x where uppercase was preferred. The rationale for this is that uppercase syntax should be reserved for typed declarations only.
-
-#####Like This
-
-```Swift
-enum Directions {
-    case north
-    case south
-    case east
-    case west
-}
-```
-
-######Not This
-
-```Swift
-enum Directions {
-    case North
-    case South
-    case East
-    case West
-}
-```
-
-###Dot Notation
-Enums must be checked with `.` notation whenever they are used. In Swift 2.x it was possible to access enum cases without the `.` prefix
-
-#####Like This
-
-```Swift
-enum Coin {
-    case heads
-    case tails
-}
-func checkCoin() {
-    if coin == .heads { print("heads") }
-}
-```
-
-######Not This
-
-```Swift
-enum Coin {
-	case heads
-	case tails
-}
-func checkCoin() {
-	if coin == heads { print("heads") }
-}
-```
