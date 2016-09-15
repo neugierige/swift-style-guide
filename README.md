@@ -1,11 +1,11 @@
 ![Intrepid Pursuits](intrepid-logo.png)
 #Swift Style Guide
 
-This is the documentation of Intrepid best practices and style regarding the Swift language.
+This is the documentation of Intrepid's best practices and style regarding the Swift language.
 
 ##Making / Requesting Changes
 
-Feedback and change are encouraged!  The current maintainers of this style guide are @brightredchili.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
+Feedback and change requests are encouraged!  The current maintainers of this style guide are the developers of [Intrepid](http://www.intrepid.io).  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
 then open a pull request. :zap:
 
 ##Goals
@@ -24,6 +24,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Code Grouping](#code-grouping)
 * [Classes, Structs, and Protocols](#classes-structs-and-protocols)
 	* [Structs vs Classes](#structs-vs-classes)
+    * [Protocol Naming](#protocol-naming)
 * [Types](#types)
 	* [Type Specifications](#type-specifications)
 	* [Let vs Var](#let-vs-var)
@@ -42,6 +43,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Classes final by default](#make-classes-final-by-default)
 * [Functions](#functions)
 	* [Declarations](#declarations)
+    * [Naming](#naming)
 	* [Calling](#calling)
 * [Closures](#closures)
 	* [Closure Specifications](#closure-specifications)
@@ -145,6 +147,17 @@ struct Car: Vehicle {
 ```
 
 **_Rationale:_** Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
+
+####Protocol Naming
+
+Protocols that describe _what something is_ should be named as nouns.
+```Swift
+Collection, ViewDelegate, etc.
+```
+Protocols that describe the _capability_ of something should be named using the suffixes `able`, `ible`, or `ing`.
+```Swift
+Equatable, Reporting, Sustainable, etc.
+```
 
 ##Types
 
@@ -458,34 +471,43 @@ Specifications around the preferable syntax to use when declaring, and using fun
 
 ###Declarations
 
-When declaring a function, external parameters are always preferable.  Functions that don't include the first argument in the name should declare a first argument explicitly.
+With Swift 3, the way that parameter names are treated has changed. Now the first parameter will always be shown unless explicitly requested not to. This means that functions declarations should take that into account and no longer need to use long, descriptive names.
 
 #####Like this:
 ```Swift
-func moveView(view: UIView, toFrame frame: CGRect)
+func move(view: UIView, toFrame: CGRect)
+
+func preferredFont(forTextStyle: String) -> UIFont
 ```
 
 ######Not this:
 ```Swift
-func move(view: UIView, _ frame: CGRect)
+func moveView(view: UIView, toFrame frame: CGRect)
+
+func preferredFontForTextStyle(style: String) -> UIFont
 ```
 
-###Parameter Names
-
-With Swift 3, first parameter labels are now considered default. This means that you will no longer need to worry about doubling up the parameter name if you want it to be exposed to callers.
-
-**Swift 3**
-
+If you absolutely need to hide the first parameter name it is still possible by using an `_` for its external name, but this is not preferred.
 ```Swift
-func foo(x: Int, y: Int)
-// Callers will see foo(x: Int, y: Int)
+func moveView(_ view: UIView, toFrame: CGRect)
 ```
 
-**Swift 2**
+**_Rationale:_** Function declarations should flow as a sentence in order to make them easier to understand and reason about.
 
+###Naming
+
+Avoid needless repetition when naming functions. This is following the style of the core API changes in Swift 3.
+
+#####Like this:
 ```Swift
-func foo(x x: Int, y: Int)
-// Callers will see foo(x: Int, y: Int)
+let blue = UIColor.blue
+let newText = oldText.append(attributedString)
+```
+
+######Not this:
+```Swift
+let blue = UIColor.blueColor()
+let newText = oldText.appendAttributedString(attributedString)
 ```
 
 ###Calling
@@ -493,9 +515,9 @@ func foo(x x: Int, y: Int)
 ... some specifications on calling functions
 
 - Avoid declaring large arguments inline
-- For functions with many argument, specify each arg on new line and `)` on final line
+- For functions with many arguments, specify each arg on a new line and the `)` on the final line
 - Use trailing closure syntax for simple functions
-- Avoid trailing closures at the end of functions with many arguments.  (3+)?
+- Avoid trailing closures at the end of functions with many arguments.  (3+)
 
 ##Closures
 
