@@ -613,3 +613,28 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
 }
 ```
 (Even though the default spacing and syntax from Xcode might do it this way)
+
+###Referring to self
+
+When referring to `self` within a closure you must be careful to avoid creating a [strong reference cycle](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID56). Always use a capture list, such as `[weak self]` when it's necessary to use functions or properties outside of the closure.
+
+#####Like this:
+```swift
+lazy var someClosure: () -> String? = { [weak self] in
+    guard let safeSelf = self else { return nil }
+    return safeSelf.someFunction()
+}
+```
+
+#####Not this:
+```swift
+viewModel.someClosure { self in
+    self.outsideFunction()
+}
+```
+
+**_Rationale_** If a closure holds onto a strong reference to a property being used within it there will be a strong reference cycle causing a memory leak.
+
+###Should I Use `unowned` or `weak`?
+
+* `weak` is always preferable as it creates an optional so that crashes are prevented. `unowned` is only useful when you are guaranteed that the value will never be `nil` within the closure. Since this creates the possibility for unsafe access it should be avoided.
