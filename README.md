@@ -50,7 +50,8 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Shorthand](#shorthand)
 	* [Trailing closures](#trailing-closures)
 	* [Multiple closures](#multiple-closures)
-* [Enums](#enums)
+	* [Referring to `self`](#referring-to-self)
+	* [Should I use `unowned` or `weak`](#should-i-use-unowned-or-weak)
 
 ##General
 
@@ -614,7 +615,7 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
 ```
 (Even though the default spacing and syntax from Xcode might do it this way)
 
-###Referring to self
+###Referring to `self`
 
 When referring to `self` within a closure you must be careful to avoid creating a [strong reference cycle](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID56). Always use a capture list, such as `[weak self]` when it's necessary to use functions or properties outside of the closure.
 
