@@ -636,6 +636,6 @@ viewModel.someClosure { self in
 
 **_Rationale_** If a closure holds onto a strong reference to a property being used within it there will be a strong reference cycle causing a memory leak.
 
-###Should I Use `unowned` or `weak`?
+###Should I use `unowned` or `weak`?
 
 * `weak` is always preferable as it creates an optional so that crashes are prevented. `unowned` is only useful when you are guaranteed that the value will never be `nil` within the closure. Since this creates the possibility for unsafe access it should be avoided.
