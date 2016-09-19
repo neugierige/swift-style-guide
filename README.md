@@ -1,11 +1,11 @@
 ![Intrepid Pursuits](intrepid-logo.png)
 #Swift Style Guide
 
-This is the documentation of Intrepid best practices and style regarding the Swift language.
+This is the documentation of Intrepid's best practices and style regarding the Swift language.
 
 ##Making / Requesting Changes
 
-Feedback and changes are encouraged!  The current maintainers of this style guide are @brightredchili and @loganwright.  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
+Feedback and change requests are encouraged!  The current maintainers of this style guide are the developers of [Intrepid](http://www.intrepid.io).  If you have an issue with any of the existing rules and would like to see something changed, please see the [contribution guidelines](CONTRIBUTING.md),
 then open a pull request. :zap:
 
 ##Goals
@@ -24,6 +24,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Code Grouping](#code-grouping)
 * [Classes, Structs, and Protocols](#classes-structs-and-protocols)
 	* [Structs vs Classes](#structs-vs-classes)
+    * [Protocol Naming](#protocol-naming)
 * [Types](#types)
 	* [Type Specifications](#type-specifications)
 	* [Let vs Var](#let-vs-var)
@@ -31,6 +32,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Operator Definitions](#operator-definitions)
 	* [Dictionaries](#dictionaries)
 	* [Type Inference](#type-inference)
+    * [Enums](#enums)
 * [Optionals](#optionals)
 	* [Force-Unwrapping of Optionals](#force-unwrapping-of-optionals)
 	* [Optional Chaining](#optional-chaining)
@@ -41,12 +43,14 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Classes final by default](#make-classes-final-by-default)
 * [Functions](#functions)
 	* [Declarations](#declarations)
+    * [Naming](#naming)
 	* [Calling](#calling)
 * [Closures](#closures)
 	* [Closure Specifications](#closure-specifications)
 	* [Shorthand](#shorthand)
 	* [Trailing closures](#trailing-closures)
 	* [Multiple closures](#multiple-closures)
+* [Enums](#enums)
 
 ##General
 
@@ -143,6 +147,17 @@ struct Car: Vehicle {
 ```
 
 **_Rationale:_** Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
+
+####Protocol Naming
+
+Protocols that describe _what something is_ should be named as nouns.
+```Swift
+Collection, ViewDelegate, etc.
+```
+Protocols that describe the _capability_ of something should be named using the suffixes `able`, `ible`, or `ing`.
+```Swift
+Equatable, Reporting, Sustainable, etc.
+```
 
 ##Types
 
@@ -272,6 +287,34 @@ var hello: String? = "Hello"
 
 **_Rationale:_** The type specifier is saying something about the _identifier_ so
 it should be positioned with it.
+
+###Enums
+
+Enum cases should be defined in `camelCase` with leading lowercase letters. This is counter to Swift 2.x where uppercase was preferred.
+
+#####Like This
+
+```Swift
+enum Directions {
+    case north
+    case south
+    case east
+    case west
+}
+```
+
+######Not This
+
+```Swift
+enum Directions {
+    case North
+    case South
+    case East
+    case West
+}
+```
+
+**_Rationale:_** Uppercase syntax should be reserved for typed declarations only.
 
 ##Optionals
 
@@ -428,16 +471,43 @@ Specifications around the preferable syntax to use when declaring, and using fun
 
 ###Declarations
 
-When declaring a function, external parameters are always preferable.  Functions that don't include the first argument in the name should declare a first argument explicitly.
+With Swift 3, the way that parameter names are treated has changed. Now the first parameter will always be shown unless explicitly requested not to. This means that functions declarations should take that into account and no longer need to use long, descriptive names.
 
 #####Like this:
 ```Swift
-func moveView(view: UIView, toFrame frame: CGRect)
+func move(view: UIView, toFrame: CGRect)
+
+func preferredFont(forTextStyle: String) -> UIFont
 ```
 
 ######Not this:
 ```Swift
-func move(view: UIView, _ frame: CGRect)
+func moveView(view: UIView, toFrame frame: CGRect)
+
+func preferredFontForTextStyle(style: String) -> UIFont
+```
+
+If you absolutely need to hide the first parameter name it is still possible by using an `_` for its external name, but this is not preferred.
+```Swift
+func moveView(_ view: UIView, toFrame: CGRect)
+```
+
+**_Rationale:_** Function declarations should flow as a sentence in order to make them easier to understand and reason about.
+
+###Naming
+
+Avoid needless repetition when naming functions. This is following the style of the core API changes in Swift 3.
+
+#####Like this:
+```Swift
+let blue = UIColor.blue
+let newText = oldText.append(attributedString)
+```
+
+######Not this:
+```Swift
+let blue = UIColor.blueColor()
+let newText = oldText.appendAttributedString(attributedString)
 ```
 
 ###Calling
@@ -445,9 +515,9 @@ func move(view: UIView, _ frame: CGRect)
 ... some specifications on calling functions
 
 - Avoid declaring large arguments inline
-- For functions with many argument, specify each arg on new line and `)` on final line
+- For functions with many arguments, specify each arg on a new line and the `)` on the final line
 - Use trailing closure syntax for simple functions
-- Avoid trailing closures at the end of functions with many arguments.  (3+)?
+- Avoid trailing closures at the end of functions with many arguments.  (3+)
 
 ##Closures
 
@@ -543,3 +613,28 @@ UIView.animateWithDuration(SomeTimeValue, animations: {
 }
 ```
 (Even though the default spacing and syntax from Xcode might do it this way)
+
+###Referring to self
+
+When referring to `self` within a closure you must be careful to avoid creating a [strong reference cycle](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID56). Always use a capture list, such as `[weak self]` when it's necessary to use functions or properties outside of the closure.
+
+#####Like this:
+```swift
+lazy var someClosure: () -> String? = { [weak self] in
+    guard let safeSelf = self else { return nil }
+    return safeSelf.someFunction()
+}
+```
+
+#####Not this:
+```swift
+viewModel.someClosure { self in
+    self.outsideFunction()
+}
+```
+
+**_Rationale_** If a closure holds onto a strong reference to a property being used within it there will be a strong reference cycle causing a memory leak.
+
+###Should I Use `unowned` or `weak`?
+
+* `weak` is always preferable as it creates an optional so that crashes are prevented. `unowned` is only useful when you are guaranteed that the value will never be `nil` within the closure. Since this creates the possibility for unsafe access it should be avoided.
