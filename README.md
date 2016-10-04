@@ -22,6 +22,7 @@ Attempt to encourage patterns that accomplish the following goals:
 	* [Swift-Clean](#swift-clean)
 	* [Whitespace](#whitespace)
 	* [Code Grouping](#code-grouping)
+	* [Guard Statements](#guard-statements)
 * [Classes, Structs, and Protocols](#classes-structs-and-protocols)
 	* [Structs vs Classes](#structs-vs-classes)
     * [Protocol Naming](#protocol-naming)
@@ -87,6 +88,30 @@ When grouping protocol conformance, always use the name of the protocol and only
 
 ```Swift
 // MARK: Table View Delegate
+```
+
+###Guard Statements
+
+#####Single assignment `guard`
+```Swift
+guard let value = someMethodThatReturnsOptional() else {
+    return nil
+}
+```
+
+#####Multi assignment `guard`
+```Swift
+guard
+    let strongSelf = self,
+    let foo = strongSelf.editing
+    else {
+        return
+}
+```
+
+#####Single line `guard`
+```Swift
+guard value is ValueType else { return }
 ```
 
 ##Classes, Structs, and Protocols
