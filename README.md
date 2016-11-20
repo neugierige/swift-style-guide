@@ -92,12 +92,19 @@ When grouping protocol conformance, always use the name of the protocol and only
 
 ###Guard Statements
 
+Guard statements are meant to be used as early return logic only. They should not be used for regular control flow in place of a traditional control flow statement.
+
 #####Single assignment `guard`
 ```Swift
+// Multi-line
 guard let value = someMethodThatReturnsOptional() else {
     return nil
 }
+
+// Single line
+guard let value = someMethod() else { return }
 ```
+
 
 #####Multi assignment `guard`
 ```Swift
@@ -107,11 +114,6 @@ guard
     else {
         return
 }
-```
-
-#####Single line `guard`
-```Swift
-guard value is ValueType else { return }
 ```
 
 ##Classes, Structs, and Protocols
