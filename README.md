@@ -96,15 +96,10 @@ Guard statements are meant to be used as early return logic only. They should no
 
 #####Single assignment `guard`
 ```Swift
-// Multi-line
 guard let value = someMethodThatReturnsOptional() else {
     return nil
 }
-
-// Single line
-guard let value = someMethod() else { return }
 ```
-
 
 #####Multi assignment `guard`
 ```Swift
