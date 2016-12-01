@@ -550,7 +550,7 @@ It is preferable to associate a closure's type from the left hand side when poss
 
 #####Like this:
  ```Swift
- let layout: (UIView, UIView) -> Void = { view1, view2 in
+ let layout: (UIView, UIView) -> Void = { (view1, view2) in
    view1.center = view2.center
    // ...
  }
@@ -563,6 +563,42 @@ let layout = { (view1: UIView, view2: UIView) in
   // ...
 }
 ```
+
+###Void arguments/return types
+
+It is preferable to not use `Void` in closure arguments or return types, omitting parentheses where possible.
+
+#####Like this:
+```Swift
+let noArgNoReturnClosure = { doSomething() } // no arguments or return types, omit both
+let noArgClosure = { () -> Int in return getValue() } // void argument, use '()'
+let noReturnClosure = { (arg) in doSomething(with: arg) } // void return type, omit return type
+```
+
+######Not this:
+```Swift
+let noArgNoReturnClosure = { (Void) -> Void in doSomething() } // don't do this
+let noArgClosure = { (Void) -> Int in return getValue() } // don't do this
+let noReturnClosure = { (arg) -> Void in doSomething(with: arg) } // don't do this
+```
+
+However, when defining closure type, `Void` is preferred to `()`
+
+#####Like this:
+```Swift
+typealias NoArgNoReturnClosure = Void -> Void
+typealias NoArgClosure = Void -> Int
+typealias NoReturnClosure = Int -> Void
+```
+
+######Not this:
+```Swift
+typealias NoArgNoReturnClosure = () -> ()
+typealias NoArgClosure = () -> Int
+typealias NoReturnClosure = Int -> ()
+```
+
+
 
 ###Shorthand
 
