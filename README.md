@@ -96,9 +96,7 @@ Guard statements are meant to be used as early return logic only. They should no
 
 #####Single assignment `guard`
 ```Swift
-guard let value = someMethodThatReturnsOptional() else {
-    return nil
-}
+guard let value = someMethodThatReturnsOptional() else { return nil }
 ```
 
 #####Multi assignment `guard`
@@ -106,9 +104,27 @@ guard let value = someMethodThatReturnsOptional() else {
 guard
     let strongSelf = self,
     let foo = strongSelf.editing
-    else {
-        return
+    else { return }
+```
+
+#####Complex Returns `guard`
+This is any situation where you'd want to do more work in the guard than just return or throw.
+```Swift
+guard let value = someMethodThatReturnsOptional() else { 
+    doSomeNecessaryThing()
+    return nil 
 }
+```
+
+#####Complex Returns (Multi-assignment) `guard`
+```Swift
+guard
+    let strongSelf = self,
+    let foo = strongSelf.editing
+    else {
+    	doSomeNecessaryThing()
+        throw Error.FooUnknown 
+    }
 ```
 
 ##Classes, Structs, and Protocols
