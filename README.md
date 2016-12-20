@@ -122,7 +122,7 @@ guard
     let strongSelf = self,
     let foo = strongSelf.editing
     else {
-    	doSomeNecessaryThing()
+        doSomeNecessaryThing()
         throw Error.FooUnknown 
     }
 ```
